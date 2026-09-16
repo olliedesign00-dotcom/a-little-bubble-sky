@@ -22,7 +22,8 @@ Select **Sound on / Sound off** to toggle effects. The setting is saved on your 
 
 - `blow.mp3`: gentle breath during inflation, played more quietly in microphone mode to reduce feedback.
 - `bubble-pop-s.mp3`, `bubble-pop-m.mp3`, `bubble-pop-l.mp3`: small, medium, and large bubble sounds, played when a breath releases a bubble and when a bubble is popped. A double-wand release plays one sound per breath.
-- `bubble-pop-m.mp3` also plays when selecting START.
+- `bubble-pop-m.mp3` also plays when selecting START while sound is enabled.
+- `bubble-pop-s.mp3` confirms both sound-toggle states, including switching sound off.
 - `change.mp3`: switching wands.
 
 Audio files are provided by the project owner and stored in `dist/assets/audio/`.

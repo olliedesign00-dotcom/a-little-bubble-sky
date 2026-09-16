@@ -15,13 +15,15 @@ class BubbleSound {
   if(this.context.state==='suspended')this.context.resume().catch(()=>{});
  }
  toggle(){this.unlock();this.muted=!this.muted;if(this.master)this.master.gain.setTargetAtTime(this.muted?0:.65,this.context.currentTime,.02);try{localStorage.setItem('bubble-muted',String(this.muted))}catch{}return this.muted}
- play(name,volume=.6){
+ play(name,volume=.6,controlFeedback=false){
   this.unlock();const started=performance.now();
   const attempt=()=>{
-   if(this.muted||document.hidden||!this.context)return;
+   if((this.muted&&!controlFeedback)||document.hidden||!this.context)return;
    if(!this.buffers[name]){if(performance.now()-started<1500)setTimeout(attempt,40);return}
    if(this.voices.size>=6)return;
-   const source=this.context.createBufferSource(),gain=this.context.createGain();source.buffer=this.buffers[name];gain.gain.value=volume;source.connect(gain);gain.connect(this.master);
+   const source=this.context.createBufferSource(),gain=this.context.createGain();source.buffer=this.buffers[name];gain.gain.value=volume*(controlFeedback?.65:1);source.connect(gain);
+   // The sound toggle confirms both states without unmuting other effects.
+   gain.connect(controlFeedback?this.context.destination:this.master);
    this.voices.add(source);source.onended=()=>{this.voices.delete(source);source.disconnect();gain.disconnect()};
    this.suppressUntil=Math.max(this.suppressUntil,performance.now()+source.buffer.duration*1000+180);source.start();
   };attempt();
@@ -43,7 +45,7 @@ class BubbleSound {
 window.bubbleSound=new BubbleSound();
 const soundButton=document.querySelector('#sound-toggle');
 function updateSoundButton(){const muted=window.bubbleSound.muted;soundButton.textContent=muted?'Sound off':'Sound on';soundButton.setAttribute('aria-pressed',String(!muted));soundButton.setAttribute('aria-label',muted?'Enable sound effects':'Mute sound effects')}
-soundButton.addEventListener('click',()=>{window.bubbleSound.toggle();updateSoundButton()});updateSoundButton();
+soundButton.addEventListener('click',()=>{window.bubbleSound.toggle();window.bubbleSound.play('bubble-pop-s',.65,true);updateSoundButton()});updateSoundButton();
 addEventListener('pointerdown',()=>window.bubbleSound.unlock(),{capture:true});
 addEventListener('keydown',e=>{if(e.code==='Space'||e.code==='Enter')window.bubbleSound.unlock()},{capture:true});
 addEventListener('blur',()=>window.bubbleSound.setBreath(false,0,false));
