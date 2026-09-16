@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="theme-color" content="#94e2ff"><meta name="description" content="Blow or press Space. Let a bubble drift into the sky.">
+<title>Bubble — Blow a Bubble</title>
+<link rel="icon" type="image/png" href="assets/bubble-icon.png">
+<link rel="preload" href="assets/coiny.ttf" as="font" type="font/ttf" crossorigin>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<main id="experience" aria-label="Blow bubbles">
+<div class="sky" aria-hidden="true"></div>
+<canvas id="bubble-depth" aria-hidden="true"></canvas>
+<canvas id="bubbles" aria-label="Hold the wand to inflate a bubble, then release to let it float"></canvas>
+<img class="brand-icon" src="assets/bubble-icon.png" alt="Bubble" width="80" height="80">
+<section id="bubble-intro" aria-label="Blow a Bubble"><h1 class="sr-only">Blow a Bubble</h1></section>
+<button id="start-button" class="liquid-glass start-button intro-pending" inert aria-label="Start with your microphone, or hold Space to blow a bubble">
+<span class="start-title">START</span><span class="start-hint">blow or press space</span>
+</button>
+<nav class="wand-navigation" aria-label="Change bubble wand">
+<button id="previous-wand" class="liquid-glass wand-arrow" aria-label="Previous bubble wand"><img src="assets/previous.svg" alt="" width="96" height="96"></button>
+<button id="next-wand" class="liquid-glass wand-arrow" aria-label="Next bubble wand"><img src="assets/next.svg" alt="" width="96" height="96"></button>
+</nav>
+<div class="counter" aria-label="Bubbles released"><span id="count">00</span><span id="count-label">bubble</span></div>
+<p id="scene-caption" class="sr-only" role="status">Round wand. Select Start to enable the microphone, or hold Space.</p>
+<p id="mic-status" class="sr-only" role="status"></p>
+<div id="notice" role="status" hidden></div>
+</main><script src="bubble-3d.js"></script><script src="wand.js"></script><script src="bubble-type.js"></script><script src="intro.js"></script><script src="burst.js"></script><script src="app.js"></script>
+</body></html>
