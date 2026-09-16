@@ -83,6 +83,8 @@ function release(immediate=false){
   if(!immediate)b.motion={...b.motion,attachment:{...b.anchor,growth:b.inflation,amount:1,pinch:0}};
   bubbles.push(b);
  }
+ // One pop per completed breath, including a paired release from the double wand.
+ if(!immediate)window.bubbleSound?.pop(parts[0].r);
  count+=parts.length;$('#count').textContent=String(count).padStart(2,'0');$('#count-label').textContent=count>=2?'bubbles':'bubble';setCaption('Release gently and let the bubble drift away.');
 }
 function inflate(dt,time){
@@ -154,16 +156,17 @@ function selectWand(type){
 function drawWand(){
  const p=origin();drawRealisticWand(ctx,p,selectedWand,wands[selectedWand].color,width<760,Math.min(devicePixelRatio,2),Math.max(90,height-p.y-p.r*(selectedWand==='double'?1.33:1)+20));
 }
-function setManual(on){if(on&&!manual)manualAge=0;manual=on;if(!on&&!breath)release()}
+function setManual(on){if(on)window.bubbleSound?.unlock();if(on&&!manual)manualAge=0;manual=on;if(!on&&!breath)release()}
 function notify(text){$('#notice').textContent=text;$('#notice').hidden=false;clearTimeout(noticeTimer);noticeTimer=setTimeout(()=>$('#notice').hidden=true,5200)}
 function enterExperience(){window.bubbleIntro?.revealStart();started=true;$('#start-button').hidden=true}
 function stopMic(){requestVersion++;micStream?.getTracks().forEach(t=>t.stop());micStream=null;analyser=null;samples=null;audioContext?.close().catch(()=>{});audioContext=null;breath=false;level=0;soundLevel=0;soundTime=0;blowSince=quietSince=0;if(!manual)release();document.body.classList.remove('listening');$('#mic-status').textContent='Microphone off.';}
 async function startExperience(){
+ window.bubbleSound?.play('bubble-pop-m',.65);
  enterExperience();if(micStream||micPending)return;
  micPending=true;const version=++requestVersion;
  try{
   if(!navigator.mediaDevices?.getUserMedia)throw new Error('unsupported');
-  const stream=await navigator.mediaDevices.getUserMedia({audio:{echoCancellation:false,noiseSuppression:false,autoGainControl:false},video:false});
+  const stream=await navigator.mediaDevices.getUserMedia({audio:{echoCancellation:true,noiseSuppression:false,autoGainControl:false},video:false});
   if(version!==requestVersion){stream.getTracks().forEach(t=>t.stop());return}
   micStream=stream;audioContext=new (window.AudioContext||window.webkitAudioContext)();await audioContext.resume();
   if(version!==requestVersion)return;
@@ -174,6 +177,7 @@ async function startExperience(){
 }
 function sampleBreath(time){
  if(!analyser)return;
+ if(!breath&&performance.now()<(window.bubbleSound?.suppressUntil||0)){blowSince=0;return}
  const dt=clamp((time-soundTime)/1000,.001,.06);soundTime=time;
  analyser.getFloatTimeDomainData(samples);
  let mean=0;for(const s of samples)mean+=s;mean/=samples.length;
@@ -206,6 +210,7 @@ function frame(time){
  flow=approach(flow,target,dt,target>flow?.13:.22);
  document.body.classList.toggle('blowing',blowing);
  if(blowing)inflate(dt,time);
+ window.bubbleSound?.setBreath(blowing,flow,!!micStream&&!manual);
 
  ctx.clearRect(0,0,width,height);
  bubbles.sort((a,b)=>b.age-a.age);
@@ -223,7 +228,7 @@ function frame(time){
 }
 requestAnimationFrame(frame);
 $('#start-button').addEventListener('click',startExperience);
-function cycleWand(direction){const types=Object.keys(wands);selectWand(types[(types.indexOf(selectedWand)+direction+types.length)%types.length])}
+function cycleWand(direction){window.bubbleSound?.play('change',.45);const types=Object.keys(wands);selectWand(types[(types.indexOf(selectedWand)+direction+types.length)%types.length])}
 $('#previous-wand').addEventListener('click',()=>cycleWand(-1));
 $('#next-wand').addEventListener('click',()=>cycleWand(1));
 addEventListener('keydown',e=>{if(e.code==='Space'&&!['INPUT','TEXTAREA'].includes(document.activeElement.tagName)){e.preventDefault();if(!e.repeat){enterExperience();setManual(true)}}});
@@ -236,7 +241,7 @@ function popBubbleAt(x,y){
   return Math.hypot(dx,dy)<r*bubbleOutlineRadius(b.type)(Math.atan2(dy,dx));
  });
  if(i<0)return false;
- const b=bubbles.splice(i,1)[0];bursts.push(new BubbleBurst(b,x,y,reduced));bursts=bursts.slice(-20);return true;
+ const b=bubbles.splice(i,1)[0];window.bubbleSound?.pop(b.screenR||b.r);bursts.push(new BubbleBurst(b,x,y,reduced));bursts=bursts.slice(-20);return true;
 }
 canvas.addEventListener('pointerdown',e=>{
  if(e.button!==0)return;

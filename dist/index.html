@@ -13,6 +13,7 @@
 <canvas id="bubble-depth" aria-hidden="true"></canvas>
 <canvas id="bubbles" aria-label="Hold the wand to inflate a bubble, then release to let it float"></canvas>
 <img class="brand-icon" src="assets/bubble-icon.png" alt="Bubble" width="80" height="80">
+<button id="sound-toggle" class="liquid-glass sound-toggle" aria-pressed="true" aria-label="Mute sound effects">Sound on</button>
 <section id="bubble-intro" aria-label="Blow a Bubble"><h1 class="sr-only">Blow a Bubble</h1></section>
 <button id="start-button" class="liquid-glass start-button intro-pending" inert aria-label="Start with your microphone, or hold Space to blow a bubble">
 <span class="start-title">START</span><span class="start-hint">blow or press space</span>
@@ -25,5 +26,5 @@
 <p id="scene-caption" class="sr-only" role="status">Round wand. Select Start to enable the microphone, or hold Space.</p>
 <p id="mic-status" class="sr-only" role="status"></p>
 <div id="notice" role="status" hidden></div>
-</main><script src="bubble-3d.js"></script><script src="wand.js"></script><script src="bubble-type.js"></script><script src="intro.js"></script><script src="burst.js"></script><script src="app.js"></script>
+</main><script src="bubble-3d.js"></script><script src="wand.js"></script><script src="bubble-type.js"></script><script src="sound.js"></script><script src="intro.js"></script><script src="burst.js"></script><script src="app.js"></script>
 </body></html>

@@ -13,6 +13,7 @@
   letter.disabled=true;letter.style.animationPlayState='paused';
   if(document.activeElement===letter){revealStart();start.focus({preventScroll:true})}
   const box=letter.getBoundingClientRect(),stage=document.querySelector('#experience');
+  window.bubbleSound?.pop(Math.max(box.width,box.height)*.45);
   const px=event?.detail?event.clientX-box.left:box.width/2,py=event?.detail?event.clientY-box.top:box.height/2;
   if(!reduced){
    const reach=Math.hypot(box.width,box.height);

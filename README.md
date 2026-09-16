@@ -16,6 +16,17 @@ An interactive bubble-blowing website with microphone, keyboard, and touch contr
 
 Microphone audio is analyzed locally in your browser. Audio is not recorded or uploaded, and the camera is not used.
 
+## Sound effects
+
+Select **Sound on / Sound off** to toggle effects. The setting is saved on your device. Sound is enabled only after a pointer or keyboard interaction.
+
+- `blow.mp3`: gentle breath during inflation, played more quietly in microphone mode to reduce feedback.
+- `bubble-pop-s.mp3`, `bubble-pop-m.mp3`, `bubble-pop-l.mp3`: small, medium, and large bubble sounds, played when a breath releases a bubble and when a bubble is popped. A double-wand release plays one sound per breath.
+- `bubble-pop-m.mp3` also plays when selecting START.
+- `change.mp3`: switching wands.
+
+Audio files are provided by the project owner and stored in `dist/assets/audio/`.
+
 ## Local development
 
 The website uses plain HTML, CSS, and JavaScript. No packages or build step are required.
