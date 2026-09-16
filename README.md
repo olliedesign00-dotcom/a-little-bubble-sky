@@ -1,5 +1,7 @@
 # Blow a Bubble
 
+[Visit the live website on GitHub Pages](https://olliedesign00-dotcom.github.io/a-little-bubble-sky/)
+
 An interactive bubble-blowing website with microphone, keyboard, and touch controls. It features soap-film lettering, interchangeable bubble wands, and a slowly drifting photographic sky.
 
 ## How to play
